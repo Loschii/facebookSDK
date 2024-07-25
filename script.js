@@ -2,7 +2,7 @@
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '917368066880291', // Substitua YOUR_APP_ID pelo seu App ID do Facebook
+        appId      : '917368066880291', 
         cookie     : true,
         xfbml      : true,
         version    : 'v12.0'
@@ -73,3 +73,29 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
         }
     });
 });
+
+// Lida com o login do Google
+function handleCredentialResponse(response) {
+    const responsePayload = decodeJwtResponse(response.credential);
+    console.log('ID: ' + responsePayload.sub);
+    console.log('Full Name: ' + responsePayload.name);
+    console.log('Given Name: ' + responsePayload.given_name);
+    console.log('Family Name: ' + responsePayload.family_name);
+    console.log('Image URL: ' + responsePayload.picture);
+    console.log('Email: ' + responsePayload.email);
+
+    document.getElementById('message').textContent = 'Login successful! Welcome, ' + responsePayload.name;
+    document.getElementById('message').style.color = 'green';
+    document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
+}
+
+// Função para decodificar o JWT retornado pela API de autenticação do Google
+function decodeJwtResponse(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
