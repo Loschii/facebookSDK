@@ -1,5 +1,4 @@
 
-
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
@@ -61,7 +60,9 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
 
 // Lida com o logout do Facebook
 document.getElementById('fb-logout-btn').addEventListener('click', function() {
+    console.log('Logout button clicked');
     FB.logout(function(response) {
+        console.log('FB.logout response', response);
         if (response.status !== 'connected') {
             document.getElementById('message').textContent = 'Logged out from Facebook';
             document.getElementById('message').style.color = 'blue';
