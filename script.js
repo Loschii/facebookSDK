@@ -1,7 +1,7 @@
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '917368066880291', 
+        appId      : '917368066880291', // Substitua YOUR_APP_ID pelo seu App ID do Facebook
         cookie     : true,
         xfbml      : true,
         version    : 'v12.0'
@@ -31,6 +31,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     if (username === 'admin' && password === 'admin123') {
         document.getElementById('message').textContent = 'Login successful!';
         document.getElementById('message').style.color = 'green';
+        document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
     } else {
         document.getElementById('message').textContent = 'Invalid username or password';
         document.getElementById('message').style.color = 'red';
@@ -46,6 +47,7 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
                 console.log('Logado como: ' + response.name);
                 document.getElementById('message').textContent = 'Login successful! Welcome, ' + response.name;
                 document.getElementById('message').style.color = 'green';
+                document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
             });
         } else {
             console.log('O usuário cancelou o login ou não autorizou.');
@@ -53,4 +55,13 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
             document.getElementById('message').style.color = 'red';
         }
     }, {scope: 'public_profile,email'});
+});
+
+// Lida com o logout do Facebook
+document.getElementById('fb-logout-btn').addEventListener('click', function() {
+    FB.logout(function(response) {
+        document.getElementById('message').textContent = 'Logged out from Facebook';
+        document.getElementById('message').style.color = 'blue';
+        document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout
+    });
 });
