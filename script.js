@@ -1,3 +1,5 @@
+
+
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
@@ -60,8 +62,13 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
 // Lida com o logout do Facebook
 document.getElementById('fb-logout-btn').addEventListener('click', function() {
     FB.logout(function(response) {
-        document.getElementById('message').textContent = 'Logged out from Facebook';
-        document.getElementById('message').style.color = 'blue';
-        document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout
+        if (response.status !== 'connected') {
+            document.getElementById('message').textContent = 'Logged out from Facebook';
+            document.getElementById('message').style.color = 'blue';
+            document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout
+        } else {
+            document.getElementById('message').textContent = 'Facebook logout failed';
+            document.getElementById('message').style.color = 'red';
+        }
     });
 });
