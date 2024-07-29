@@ -103,7 +103,7 @@ function decodeJwtResponse(token) {
 // Lida com o login do GitHub
 document.getElementById('github-login-btn').addEventListener('click', function() {
     const clientId = 'Ov23li8K0IX9NV4QVQis';
-    const redirectUri = 'https://facebook-sdk-six.vercel.app/github';
+    const redirectUri = 'https://facebook-sdk-six.vercel.app/';
     const state = 'random_state_string';
     const scope = 'user';
 
