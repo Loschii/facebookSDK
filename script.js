@@ -99,3 +99,14 @@ function decodeJwtResponse(token) {
 
     return JSON.parse(jsonPayload);
 }
+
+// Lida com o login do GitHub
+document.getElementById('github-login-btn').addEventListener('click', function() {
+    const clientId = 'Ov23li8K0IX9NV4QVQis';
+    const redirectUri = 'https://facebook-sdk-six.vercel.app/github';
+    const state = 'random_state_string';
+    const scope = 'user';
+
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
+    window.location.href = githubAuthUrl;
+});
