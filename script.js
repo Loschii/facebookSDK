@@ -100,6 +100,31 @@ function decodeJwtResponse(token) {
     return JSON.parse(jsonPayload);
 }
 
+// Inicializa a API do Google Auth2
+function initGoogleAuth() {
+    gapi.load('auth2', function() {
+        gapi.auth2.init({
+            client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
+        });
+    });
+}
+
+// Lida com o logout do Google
+document.getElementById('google-logout-btn').addEventListener('click', function() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+        document.getElementById('message').textContent = 'Logged out from Google';
+        document.getElementById('message').style.color = 'blue';
+        document.getElementById('fb-logout-btn').style.display = 'none'; 
+        document.getElementById('google-logout-btn').style.display = 'none'; 
+    }).catch(function(error) {
+        console.log('Error signing out', error);
+        document.getElementById('message').textContent = 'Google logout failed';
+        document.getElementById('message').style.color = 'red';
+    });
+});
+
 // Lida com o login do GitHub
 document.getElementById('github-login-btn').addEventListener('click', function() {
     const clientId = 'Ov23li8K0IX9NV4QVQis';
