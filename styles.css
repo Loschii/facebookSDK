@@ -51,15 +51,15 @@ button:hover {
 }
 
 .google-login-button {
-    margin-top: 20px; 
+    margin-top: 20px;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .github-login-button {
     margin-top: 20px;
     display: flex;
-    justify-content: center; 
-    background-color: #333; 
+    justify-content: center;
+    background-color: #333;
     color: white;
 }

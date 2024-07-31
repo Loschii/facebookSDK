@@ -1,8 +1,7 @@
-
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '917368066880291', 
+        appId      : '917368066880291',
         cookie     : true,
         xfbml      : true,
         version    : 'v12.0'
@@ -32,7 +31,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     if (username === 'admin' && password === 'admin123') {
         document.getElementById('message').textContent = 'Login successful!';
         document.getElementById('message').style.color = 'green';
-        document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
+        document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
+        document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
     } else {
         document.getElementById('message').textContent = 'Invalid username or password';
         document.getElementById('message').style.color = 'red';
@@ -48,7 +48,8 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
                 console.log('Logado como: ' + response.name);
                 document.getElementById('message').textContent = 'Login successful! Welcome, ' + response.name;
                 document.getElementById('message').style.color = 'green';
-                document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
+                document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
+                document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
             });
         } else {
             console.log('O usuário cancelou o login ou não autorizou.');
@@ -66,13 +67,27 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
         if (response.status === 'unknown') {
             document.getElementById('message').textContent = 'Logged out from Facebook';
             document.getElementById('message').style.color = 'blue';
-            document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout
+            document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout do Facebook
+            document.getElementById('google-logout-btn').style.display = 'none'; // Oculta o botão de logout do Google
         } else {
             document.getElementById('message').textContent = 'Facebook logout failed';
             document.getElementById('message').style.color = 'red';
         }
     });
 });
+
+// Inicializa a API do Google Auth2
+function initGoogleAuth() {
+    gapi.load('auth2', function() {
+        gapi.auth2.init({
+            client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
+        }).then(function() {
+            console.log('Google Auth2 initialized');
+        }).catch(function(error) {
+            console.log('Error initializing Google Auth2', error);
+        });
+    });
+}
 
 // Lida com o login do Google
 function handleCredentialResponse(response) {
@@ -86,7 +101,8 @@ function handleCredentialResponse(response) {
 
     document.getElementById('message').textContent = 'Login successful! Welcome, ' + responsePayload.name;
     document.getElementById('message').style.color = 'green';
-    document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
+    document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
+    document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
 }
 
 // Função para decodificar o JWT retornado pela API de autenticação do Google
@@ -98,15 +114,6 @@ function decodeJwtResponse(token) {
     }).join(''));
 
     return JSON.parse(jsonPayload);
-}
-
-// Inicializa a API do Google Auth2
-function initGoogleAuth() {
-    gapi.load('auth2', function() {
-        gapi.auth2.init({
-            client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
-        });
-    });
 }
 
 // Lida com o logout do Google
