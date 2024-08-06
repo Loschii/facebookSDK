@@ -66,7 +66,7 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
         if (response.status === 'unknown') {
             document.getElementById('message').textContent = 'Logged out from Facebook';
             document.getElementById('message').style.color = 'blue';
-            document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout do Facebook
+            hideLogoutButtons();
         } else {
             document.getElementById('message').textContent = 'Facebook logout failed';
             document.getElementById('message').style.color = 'red';
