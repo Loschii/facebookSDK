@@ -117,16 +117,22 @@ function decodeJwtResponse(token) {
 // Lida com o logout do Google
 document.getElementById('google-logout-btn').addEventListener('click', function() {
     var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out.');
-        document.getElementById('message').textContent = 'Logged out from Google';
-        document.getElementById('message').style.color = 'blue';
-        hideLogoutButtons();
-    }).catch(function(error) {
-        console.log('Error signing out', error);
+    if (auth2) {
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+            document.getElementById('message').textContent = 'Logged out from Google';
+            document.getElementById('message').style.color = 'blue';
+            hideLogoutButtons();
+        }).catch(function(error) {
+            console.log('Error signing out', error);
+            document.getElementById('message').textContent = 'Google logout failed';
+            document.getElementById('message').style.color = 'red';
+        });
+    } else {
+        console.log('Google Auth2 instance not found');
         document.getElementById('message').textContent = 'Google logout failed';
         document.getElementById('message').style.color = 'red';
-    });
+    }
 });
 
 // Lida com o login do GitHub
