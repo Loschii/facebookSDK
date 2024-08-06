@@ -31,8 +31,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     if (username === 'admin' && password === 'admin123') {
         document.getElementById('message').textContent = 'Login successful!';
         document.getElementById('message').style.color = 'green';
-        document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
-        document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
+        hideLogoutButtons();
     } else {
         document.getElementById('message').textContent = 'Invalid username or password';
         document.getElementById('message').style.color = 'red';
@@ -48,8 +47,8 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
                 console.log('Logado como: ' + response.name);
                 document.getElementById('message').textContent = 'Login successful! Welcome, ' + response.name;
                 document.getElementById('message').style.color = 'green';
+                hideLogoutButtons();
                 document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
-                document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
             });
         } else {
             console.log('O usuário cancelou o login ou não autorizou.');
@@ -68,7 +67,6 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
             document.getElementById('message').textContent = 'Logged out from Facebook';
             document.getElementById('message').style.color = 'blue';
             document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout do Facebook
-            document.getElementById('google-logout-btn').style.display = 'none'; // Oculta o botão de logout do Google
         } else {
             document.getElementById('message').textContent = 'Facebook logout failed';
             document.getElementById('message').style.color = 'red';
@@ -101,7 +99,7 @@ function handleCredentialResponse(response) {
 
     document.getElementById('message').textContent = 'Login successful! Welcome, ' + responsePayload.name;
     document.getElementById('message').style.color = 'green';
-    document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
+    hideLogoutButtons();
     document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
 }
 
@@ -123,8 +121,7 @@ document.getElementById('google-logout-btn').addEventListener('click', function(
         console.log('User signed out.');
         document.getElementById('message').textContent = 'Logged out from Google';
         document.getElementById('message').style.color = 'blue';
-        document.getElementById('fb-logout-btn').style.display = 'none'; 
-        document.getElementById('google-logout-btn').style.display = 'none'; 
+        hideLogoutButtons();
     }).catch(function(error) {
         console.log('Error signing out', error);
         document.getElementById('message').textContent = 'Google logout failed';
@@ -142,3 +139,9 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
     window.location.href = githubAuthUrl;
 });
+
+// Função para ocultar todos os botões de logout
+function hideLogoutButtons() {
+    document.getElementById('fb-logout-btn').style.display = 'none';
+    document.getElementById('google-logout-btn').style.display = 'none';
+}
