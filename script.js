@@ -74,24 +74,7 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
     });
 });
 
-// Inicializa a API do Google Auth2
-function initGoogleAuth() {
-    return new Promise((resolve, reject) => {
-        gapi.load('auth2', function() {
-            gapi.auth2.init({
-                client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
-            }).then(() => {
-                console.log('Google Auth2 initialized');
-                resolve();
-            }).catch((error) => {
-                console.log('Error initializing Google Auth2', error);
-                reject(error);
-            });
-        });
-    });
-}
-
-// Lida com o login do Google
+// Função para lidar com a resposta do Google Login
 function handleCredentialResponse(response) {
     const responsePayload = decodeJwtResponse(response.credential);
     console.log('ID: ' + responsePayload.sub);
@@ -118,31 +101,13 @@ function decodeJwtResponse(token) {
     return JSON.parse(jsonPayload);
 }
 
-// Lida com o logout do Google
+// Lida com o logout do Google usando a nova API
 document.getElementById('google-logout-btn').addEventListener('click', function() {
-    initGoogleAuth().then(() => {
-        var auth2 = gapi.auth2.getAuthInstance();
-        if (auth2) {
-            auth2.signOut().then(function () {
-                console.log('User signed out.');
-                document.getElementById('message').textContent = 'Logged out from Google';
-                document.getElementById('message').style.color = 'blue';
-                hideLogoutButtons();
-            }).catch(function(error) {
-                console.log('Error signing out', error);
-                document.getElementById('message').textContent = 'Google logout failed';
-                document.getElementById('message').style.color = 'red';
-            });
-        } else {
-            console.log('Google Auth2 instance not found');
-            document.getElementById('message').textContent = 'Google logout failed';
-            document.getElementById('message').style.color = 'red';
-        }
-    }).catch((error) => {
-        console.log('Google Auth2 initialization failed', error);
-        document.getElementById('message').textContent = 'Google logout failed';
-        document.getElementById('message').style.color = 'red';
-    });
+    google.accounts.id.disableAutoSelect();
+
+    document.getElementById('message').textContent = 'Logged out from Google';
+    document.getElementById('message').style.color = 'blue';
+    hideLogoutButtons();
 });
 
 // Lida com o login do GitHub
