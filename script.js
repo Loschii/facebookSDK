@@ -76,13 +76,17 @@ document.getElementById('fb-logout-btn').addEventListener('click', function() {
 
 // Inicializa a API do Google Auth2
 function initGoogleAuth() {
-    gapi.load('auth2', function() {
-        gapi.auth2.init({
-            client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
-        }).then(function() {
-            console.log('Google Auth2 initialized');
-        }).catch(function(error) {
-            console.log('Error initializing Google Auth2', error);
+    return new Promise((resolve, reject) => {
+        gapi.load('auth2', function() {
+            gapi.auth2.init({
+                client_id: '324613151831-dmt2pta6p6feu3i482qjsab8puf2g2hj.apps.googleusercontent.com'
+            }).then(() => {
+                console.log('Google Auth2 initialized');
+                resolve();
+            }).catch((error) => {
+                console.log('Error initializing Google Auth2', error);
+                reject(error);
+            });
         });
     });
 }
@@ -116,23 +120,29 @@ function decodeJwtResponse(token) {
 
 // Lida com o logout do Google
 document.getElementById('google-logout-btn').addEventListener('click', function() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    if (auth2) {
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-            document.getElementById('message').textContent = 'Logged out from Google';
-            document.getElementById('message').style.color = 'blue';
-            hideLogoutButtons();
-        }).catch(function(error) {
-            console.log('Error signing out', error);
+    initGoogleAuth().then(() => {
+        var auth2 = gapi.auth2.getAuthInstance();
+        if (auth2) {
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                document.getElementById('message').textContent = 'Logged out from Google';
+                document.getElementById('message').style.color = 'blue';
+                hideLogoutButtons();
+            }).catch(function(error) {
+                console.log('Error signing out', error);
+                document.getElementById('message').textContent = 'Google logout failed';
+                document.getElementById('message').style.color = 'red';
+            });
+        } else {
+            console.log('Google Auth2 instance not found');
             document.getElementById('message').textContent = 'Google logout failed';
             document.getElementById('message').style.color = 'red';
-        });
-    } else {
-        console.log('Google Auth2 instance not found');
+        }
+    }).catch((error) => {
+        console.log('Google Auth2 initialization failed', error);
         document.getElementById('message').textContent = 'Google logout failed';
         document.getElementById('message').style.color = 'red';
-    }
+    });
 });
 
 // Lida com o login do GitHub
@@ -146,7 +156,7 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
-// Função para ocultar todos os botões de logout
+// Função para esconder os botões de logout
 function hideLogoutButtons() {
     document.getElementById('fb-logout-btn').style.display = 'none';
     document.getElementById('google-logout-btn').style.display = 'none';
