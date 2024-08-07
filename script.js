@@ -121,17 +121,44 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
-// Lida com o logout do GitHub
-document.getElementById('github-logout-btn').addEventListener('click', function() {
-    console.log('GitHub Logout button clicked');
-    document.getElementById('message').textContent = 'Logged out from GitHub';
-    document.getElementById('message').style.color = 'blue';
-    hideLogoutButtons();
-});
+// Função para lidar com o login do GitHub na resposta de redirecionamento
+function handleGitHubRedirect() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
 
-// Função para esconder os botões de logout
+    if (code && state) {
+        // Realizar a troca do código pelo token de acesso no servidor
+        fetch(`https://your-server.com/github-oauth-callback?code=${code}&state=${state}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('GitHub access token:', data.access_token);
+                document.getElementById('message').textContent = 'Login successful! Welcome, GitHub user';
+                document.getElementById('message').style.color = 'green';
+                hideLogoutButtons();
+                document.getElementById('github-logout-btn').style.display = 'block'; // Exibe o botão de logout do GitHub
+            })
+            .catch(error => {
+                console.log('Error during GitHub OAuth callback:', error);
+                document.getElementById('message').textContent = 'GitHub login failed';
+                document.getElementById('message').style.color = 'red';
+            });
+    }
+}
+
+// Chamar a função para lidar com o redirecionamento do GitHub ao carregar a página
+window.onload = handleGitHubRedirect;
+
+// Função para ocultar todos os botões de logout
 function hideLogoutButtons() {
     document.getElementById('fb-logout-btn').style.display = 'none';
     document.getElementById('google-logout-btn').style.display = 'none';
     document.getElementById('github-logout-btn').style.display = 'none';
 }
+
+// Lida com o logout do GitHub
+document.getElementById('github-logout-btn').addEventListener('click', function() {
+    document.getElementById('message').textContent = 'Logged out from GitHub';
+    document.getElementById('message').style.color = 'blue';
+    hideLogoutButtons();
+});
