@@ -121,8 +121,17 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
+// Lida com o logout do GitHub
+document.getElementById('github-logout-btn').addEventListener('click', function() {
+    console.log('GitHub Logout button clicked');
+    document.getElementById('message').textContent = 'Logged out from GitHub';
+    document.getElementById('message').style.color = 'blue';
+    hideLogoutButtons();
+});
+
 // Função para esconder os botões de logout
 function hideLogoutButtons() {
     document.getElementById('fb-logout-btn').style.display = 'none';
     document.getElementById('google-logout-btn').style.display = 'none';
+    document.getElementById('github-logout-btn').style.display = 'none';
 }
