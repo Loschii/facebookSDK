@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://connect.facebook.net/en_US/sdk.js" defer></script> 
-    <script src="https://accounts.google.com/gsi/client" async defer></script> 
+    <script src="https://connect.facebook.net/en_US/sdk.js" defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="script.js" defer></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body>
     <div class="login-container">
@@ -24,12 +23,6 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <div id="userInfo" style="display: none;">
-            <h3>Logged in as:</h3>
-            <p id="userName"></p>
-            <p id="userEmail"></p>
-            <img id="userPicture" src="" alt="User Picture" style="width:100px; height:100px;">
-        </div>
         <p id="message"></p>
         <div>
             <h3>Ou entre com:</h3>
@@ -41,8 +34,16 @@
             <div class="g_id_signin google-login-button" data-type="standard"></div>
             <button id="github-login-btn" class="github-login-button">GitHub</button>
         </div>
-        <button id="fb-logout-btn" style="display: none;">Logout</button> 
+        <button id="fb-logout-btn" style="display: none;">Logout Facebook</button>
         <button id="google-logout-btn" style="display: none;">Logout Google</button>
+        
+        <!-- Container para mostrar as informações do usuário -->
+        <div id="userInfo" style="display: none;">
+            <h3>Informações do Usuário</h3>
+            <p id="userName"></p>
+            <img id="userPicture" src="" alt="User Picture" style="width: 100px; height: 100px;">
+            <p id="userEmail"></p>
+        </div>
     </div>
 </body>
 </html>
