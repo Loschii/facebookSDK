@@ -1,7 +1,7 @@
 // Inicializa o SDK do Facebook
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '917368066880291',
+        appId      : '917368066880291', 
         cookie     : true,
         xfbml      : true,
         version    : 'v12.0'
@@ -31,7 +31,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     if (username === 'admin' && password === 'admin123') {
         document.getElementById('message').textContent = 'Login successful!';
         document.getElementById('message').style.color = 'green';
-        hideLogoutButtons();
+        document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
     } else {
         document.getElementById('message').textContent = 'Invalid username or password';
         document.getElementById('message').style.color = 'red';
@@ -42,13 +42,19 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 document.getElementById('fb-login-btn').addEventListener('click', function() {
     FB.login(function(response) {
         if (response.authResponse) {
-            console.log('Bem-vindo! Recuperando suas informações.... ');
-            FB.api('/me', function(response) {
+            FB.api('/me', {fields: 'name,email,picture'}, function(response) {
                 console.log('Logado como: ' + response.name);
+                
+                // Oculta o formulário de login e exibe as informações do usuário
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('userName').textContent = response.name;
+                document.getElementById('userEmail').textContent = response.email;
+                document.getElementById('userPicture').src = response.picture.data.url;
+                
                 document.getElementById('message').textContent = 'Login successful! Welcome, ' + response.name;
                 document.getElementById('message').style.color = 'green';
-                hideLogoutButtons();
-                document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout do Facebook
+                document.getElementById('fb-logout-btn').style.display = 'block'; // Exibe o botão de logout
             });
         } else {
             console.log('O usuário cancelou o login ou não autorizou.');
@@ -58,23 +64,7 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
     }, {scope: 'public_profile,email'});
 });
 
-// Lida com o logout do Facebook
-document.getElementById('fb-logout-btn').addEventListener('click', function() {
-    console.log('Logout button clicked');
-    FB.logout(function(response) {
-        console.log('FB.logout response', response);
-        if (response.status === 'unknown') {
-            document.getElementById('message').textContent = 'Logged out from Facebook';
-            document.getElementById('message').style.color = 'blue';
-            hideLogoutButtons();
-        } else {
-            document.getElementById('message').textContent = 'Facebook logout failed';
-            document.getElementById('message').style.color = 'red';
-        }
-    });
-});
-
-// Função para lidar com a resposta do Google Login
+// Lida com o login do Google
 function handleCredentialResponse(response) {
     const responsePayload = decodeJwtResponse(response.credential);
     console.log('ID: ' + responsePayload.sub);
@@ -84,10 +74,16 @@ function handleCredentialResponse(response) {
     console.log('Image URL: ' + responsePayload.picture);
     console.log('Email: ' + responsePayload.email);
 
+    // Oculta o formulário de login e exibe as informações do usuário
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'block';
+    document.getElementById('userName').textContent = responsePayload.name;
+    document.getElementById('userEmail').textContent = responsePayload.email;
+    document.getElementById('userPicture').src = responsePayload.picture;
+
     document.getElementById('message').textContent = 'Login successful! Welcome, ' + responsePayload.name;
     document.getElementById('message').style.color = 'green';
-    hideLogoutButtons();
-    document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout do Google
+    document.getElementById('google-logout-btn').style.display = 'block'; // Exibe o botão de logout
 }
 
 // Função para decodificar o JWT retornado pela API de autenticação do Google
@@ -101,13 +97,41 @@ function decodeJwtResponse(token) {
     return JSON.parse(jsonPayload);
 }
 
-// Lida com o logout do Google usando a nova API
+// Lida com o logout do Google
 document.getElementById('google-logout-btn').addEventListener('click', function() {
-    google.accounts.id.disableAutoSelect();
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+        document.getElementById('message').textContent = 'Logged out from Google';
+        document.getElementById('message').style.color = 'blue';
+        document.getElementById('fb-logout-btn').style.display = 'none'; 
+        document.getElementById('google-logout-btn').style.display = 'none'; 
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('userInfo').style.display = 'none';
+    }).catch(function(error) {
+        console.log('Error signing out', error);
+        document.getElementById('message').textContent = 'Google logout failed';
+        document.getElementById('message').style.color = 'red';
+    });
+});
 
-    document.getElementById('message').textContent = 'Logged out from Google';
-    document.getElementById('message').style.color = 'blue';
-    hideLogoutButtons();
+// Lida com o logout do Facebook
+document.getElementById('fb-logout-btn').addEventListener('click', function() {
+    console.log('Logout button clicked');
+    FB.logout(function(response) {
+        console.log('FB.logout response', response);
+        if (response.status === 'unknown') {
+            document.getElementById('message').textContent = 'Logged out from Facebook';
+            document.getElementById('message').style.color = 'blue';
+            document.getElementById('fb-logout-btn').style.display = 'none'; // Oculta o botão de logout
+            document.getElementById('google-logout-btn').style.display = 'none'; // Oculta o botão de logout
+            document.getElementById('loginForm').style.display = 'block'; // Exibe o formulário de login
+            document.getElementById('userInfo').style.display = 'none'; // Oculta as informações do usuário
+        } else {
+            document.getElementById('message').textContent = 'Facebook logout failed';
+            document.getElementById('message').style.color = 'red';
+        }
+    });
 });
 
 // Lida com o login do GitHub
@@ -120,18 +144,3 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
     window.location.href = githubAuthUrl;
 });
-
-// Lida com o logout do GitHub
-document.getElementById('github-logout-btn').addEventListener('click', function() {
-    console.log('GitHub Logout button clicked');
-    document.getElementById('message').textContent = 'Logged out from GitHub';
-    document.getElementById('message').style.color = 'blue';
-    hideLogoutButtons();
-});
-
-// Função para esconder os botões de logout
-function hideLogoutButtons() {
-    document.getElementById('fb-logout-btn').style.display = 'none';
-    document.getElementById('google-logout-btn').style.display = 'none';
-    document.getElementById('github-logout-btn').style.display = 'none';
-}
