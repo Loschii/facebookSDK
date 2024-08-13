@@ -124,18 +124,28 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
+// Verifica se a URL contém o código de autorização do GitHub
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+
+    if (code && state) {
+        // Se o código de autorização e o estado estão presentes, considera que o login foi bem-sucedido
+        document.getElementById('message').textContent = 'Login successful! Welcome from GitHub';
+        document.getElementById('message').style.color = 'green';
+        hideLoginForm();
+        document.getElementById('userInfo').style.display = 'block';
+        document.getElementById('github-logout-btn').style.display = 'block'; // Exibe o botão de logout do GitHub
+    }
+};
+
 // Lida com o logout do GitHub
 document.getElementById('github-logout-btn').addEventListener('click', function() {
-    // Exibe uma mensagem de logout
     document.getElementById('message').textContent = 'Logged out from GitHub';
     document.getElementById('message').style.color = 'blue';
-    
-    // Oculta informações do usuário e exibe o formulário de login
     showLoginForm();
     document.getElementById('userInfo').style.display = 'none';
-
-    // Simula um logout redirecionando para a página de logout do GitHub
-    window.location.href = 'https://github.com/logout';
 });
 
 // Função para esconder o formulário de login e mostrar as informações do usuário
