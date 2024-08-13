@@ -113,17 +113,6 @@ document.getElementById('google-logout-btn').addEventListener('click', function(
     document.getElementById('userInfo').style.display = 'none';
 });
 
-// Função para esconder o formulário de login e mostrar as informações do usuário
-function hideLoginForm() {
-    document.getElementById('loginForm').style.display = 'none';
-}
-
-// Função para mostrar o formulário de login novamente e esconder as informações do usuário
-function showLoginForm() {
-    document.getElementById('loginForm').style.display = 'block';
-    hideLogoutButtons();
-}
-
 // Lida com o login do GitHub
 document.getElementById('github-login-btn').addEventListener('click', function() {
     const clientId = 'Ov23li8K0IX9NV4QVQis';
@@ -135,8 +124,34 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
+// Lida com o logout do GitHub
+document.getElementById('github-logout-btn').addEventListener('click', function() {
+    // Exibe uma mensagem de logout
+    document.getElementById('message').textContent = 'Logged out from GitHub';
+    document.getElementById('message').style.color = 'blue';
+    
+    // Oculta informações do usuário e exibe o formulário de login
+    showLoginForm();
+    document.getElementById('userInfo').style.display = 'none';
+
+    // Simula um logout redirecionando para a página de logout do GitHub
+    window.location.href = 'https://github.com/logout';
+});
+
+// Função para esconder o formulário de login e mostrar as informações do usuário
+function hideLoginForm() {
+    document.getElementById('loginForm').style.display = 'none';
+}
+
+// Função para mostrar o formulário de login novamente e esconder as informações do usuário
+function showLoginForm() {
+    document.getElementById('loginForm').style.display = 'block';
+    hideLogoutButtons();
+}
+
 // Função para esconder os botões de logout
 function hideLogoutButtons() {
     document.getElementById('fb-logout-btn').style.display = 'none';
     document.getElementById('google-logout-btn').style.display = 'none';
+    document.getElementById('github-logout-btn').style.display = 'none';
 }
