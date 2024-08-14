@@ -43,11 +43,12 @@ document.getElementById('fb-login-btn').addEventListener('click', function() {
     FB.login(function(response) {
         if (response.authResponse) {
             console.log('Bem-vindo! Recuperando suas informações.... ');
-            FB.api('/me', { fields: 'name,email,picture' }, function(response) {
+            FB.api('/me', { fields: 'name,email,picture,id' }, function(response) {
                 console.log('Logado como: ' + response.name);
                 document.getElementById('userName').textContent = response.name;
                 document.getElementById('userEmail').textContent = response.email;
                 document.getElementById('userPicture').src = response.picture.data.url;
+                document.getElementById('userId').textContent = 'ID: ' + response.id;
                 document.getElementById('message').textContent = 'Login successful! Welcome, ' + response.name;
                 document.getElementById('message').style.color = 'green';
                 hideLoginForm();
@@ -85,6 +86,7 @@ function handleCredentialResponse(response) {
     document.getElementById('userName').textContent = responsePayload.name;
     document.getElementById('userEmail').textContent = responsePayload.email;
     document.getElementById('userPicture').src = responsePayload.picture;
+    document.getElementById('userId').textContent = 'ID: ' + responsePayload.sub;
     document.getElementById('message').textContent = 'Login successful! Welcome, ' + responsePayload.name;
     document.getElementById('message').style.color = 'green';
     hideLoginForm();
@@ -124,22 +126,6 @@ document.getElementById('github-login-btn').addEventListener('click', function()
     window.location.href = githubAuthUrl;
 });
 
-// Verifica se a URL contém o código de autorização do GitHub
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
-
-    if (code && state) {
-        // Se o código de autorização e o estado estão presentes, considera que o login foi bem-sucedido
-        document.getElementById('message').textContent = 'Login successful! Welcome from GitHub';
-        document.getElementById('message').style.color = 'green';
-        hideLoginForm();
-        document.getElementById('userInfo').style.display = 'block';
-        document.getElementById('github-logout-btn').style.display = 'block'; // Exibe o botão de logout do GitHub
-    }
-};
-
 // Lida com o logout do GitHub
 document.getElementById('github-logout-btn').addEventListener('click', function() {
     document.getElementById('message').textContent = 'Logged out from GitHub';
@@ -148,19 +134,20 @@ document.getElementById('github-logout-btn').addEventListener('click', function(
     document.getElementById('userInfo').style.display = 'none';
 });
 
-// Função para esconder o formulário de login e mostrar as informações do usuário
 function hideLoginForm() {
     document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('fb-login-btn').style.display = 'none';
+    document.getElementById('g_id_onload').style.display = 'none';
+    document.querySelector('.g_id_signin').style.display = 'none';
+    document.getElementById('github-login-btn').style.display = 'none';
 }
 
-// Função para mostrar o formulário de login novamente e esconder as informações do usuário
 function showLoginForm() {
     document.getElementById('loginForm').style.display = 'block';
-    hideLogoutButtons();
-}
-
-// Função para esconder os botões de logout
-function hideLogoutButtons() {
+    document.getElementById('fb-login-btn').style.display = 'inline';
+    document.getElementById('g_id_onload').style.display = 'block';
+    document.querySelector('.g_id_signin').style.display = 'block';
+    document.getElementById('github-login-btn').style.display = 'inline';
     document.getElementById('fb-logout-btn').style.display = 'none';
     document.getElementById('google-logout-btn').style.display = 'none';
     document.getElementById('github-logout-btn').style.display = 'none';
