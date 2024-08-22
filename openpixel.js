@@ -423,4 +423,4 @@ window.onload = function () {
     }.bind(dataAttributes[i]));
   }
 };
-}(window, document, window["opix"], "opix", "https://script.google.com/macros/s/AKfycbzA7rucdQEiRLV5gnCOqMMorJR4FyWF5YPLj5th5apN3q39YB2EmlbXWdBFYAnHyDH_sw/exec?method=track&email=<?= email ?>", 1));
+}(window, document, window["opix"], "opix", "https://script.google.com/macros/s/AKfycbznIxu-oa-WAqQ_oqx73IwWk1BBl9IywJ9Y3f0oXTZxHaPz3EPPaPb1zAOfmZ_57KsKqA/exec", 1));
